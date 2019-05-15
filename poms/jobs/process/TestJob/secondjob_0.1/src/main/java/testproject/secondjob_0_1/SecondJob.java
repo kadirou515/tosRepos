@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package testproject.firstjob_0_1;
+package testproject.secondjob_0_1;
 
 import routines.Numeric;
 import routines.DataOperation;
@@ -22,8 +22,8 @@ import routines.TalendDataGenerator;
 import routines.TalendStringUtil;
 import routines.TalendString;
 import routines.StringHandling;
-import routines.TalendDate;
 import routines.Relational;
+import routines.TalendDate;
 import routines.Mathematical;
 import routines.system.*;
 import routines.system.api.*;
@@ -43,13 +43,13 @@ import java.util.Comparator;
 
 @SuppressWarnings("unused")
 /**
- * Job: FirstJob Purpose: Display first job Objective<br>
- * Description: Display first job Objective <br>
+ * Job: SecondJob Purpose: <br>
+ * Description:  <br>
  * @author user@talend.com
  * @version 7.1.1.20181026_1147
- * @status TEST
+ * @status 
  */
-public class FirstJob implements TalendJob {
+public class SecondJob implements TalendJob {
 
 	protected static void logIgnoredError(String message, Throwable cause) {
 		System.err.println(message);
@@ -128,7 +128,7 @@ public class FirstJob implements TalendJob {
 	}
 
 	private final String jobVersion = "0.1";
-	private final String jobName = "FirstJob";
+	private final String jobName = "SecondJob";
 	private final String projectName = "TESTPROJECT";
 	public Integer errorCode = null;
 	private String currentComponent = "";
@@ -251,7 +251,7 @@ public class FirstJob implements TalendJob {
 				} else {
 					e.printStackTrace();
 					e.printStackTrace(errorMessagePS);
-					FirstJob.this.exception = e;
+					SecondJob.this.exception = e;
 				}
 			}
 			if (!(e instanceof TalendException)) {
@@ -259,7 +259,7 @@ public class FirstJob implements TalendJob {
 					for (java.lang.reflect.Method m : this.getClass()
 							.getEnclosingClass().getMethods()) {
 						if (m.getName().compareTo(currentComponent + "_error") == 0) {
-							m.invoke(FirstJob.this, new Object[] { e,
+							m.invoke(SecondJob.this, new Object[] { e,
 									currentComponent, globalMap });
 							break;
 						}
@@ -274,7 +274,18 @@ public class FirstJob implements TalendJob {
 		}
 	}
 
-	public void tPostjob_1_error(Exception exception, String errorComponent,
+	public void tRowGenerator_1_error(Exception exception,
+			String errorComponent, final java.util.Map<String, Object> globalMap)
+			throws TalendException {
+
+		end_Hash.put(errorComponent, System.currentTimeMillis());
+
+		status = "failure";
+
+		tRowGenerator_1_onSubJobError(exception, errorComponent, globalMap);
+	}
+
+	public void tLogRow_1_error(Exception exception, String errorComponent,
 			final java.util.Map<String, Object> globalMap)
 			throws TalendException {
 
@@ -282,43 +293,10 @@ public class FirstJob implements TalendJob {
 
 		status = "failure";
 
-		tPostjob_1_onSubJobError(exception, errorComponent, globalMap);
+		tRowGenerator_1_onSubJobError(exception, errorComponent, globalMap);
 	}
 
-	public void tSystem_2_error(Exception exception, String errorComponent,
-			final java.util.Map<String, Object> globalMap)
-			throws TalendException {
-
-		end_Hash.put(errorComponent, System.currentTimeMillis());
-
-		status = "failure";
-
-		tSystem_2_onSubJobError(exception, errorComponent, globalMap);
-	}
-
-	public void tPrejob_1_error(Exception exception, String errorComponent,
-			final java.util.Map<String, Object> globalMap)
-			throws TalendException {
-
-		end_Hash.put(errorComponent, System.currentTimeMillis());
-
-		status = "failure";
-
-		tPrejob_1_onSubJobError(exception, errorComponent, globalMap);
-	}
-
-	public void tSystem_1_error(Exception exception, String errorComponent,
-			final java.util.Map<String, Object> globalMap)
-			throws TalendException {
-
-		end_Hash.put(errorComponent, System.currentTimeMillis());
-
-		status = "failure";
-
-		tSystem_1_onSubJobError(exception, errorComponent, globalMap);
-	}
-
-	public void tPostjob_1_onSubJobError(Exception exception,
+	public void tRowGenerator_1_onSubJobError(Exception exception,
 			String errorComponent, final java.util.Map<String, Object> globalMap)
 			throws TalendException {
 
@@ -329,42 +307,179 @@ public class FirstJob implements TalendJob {
 
 	}
 
-	public void tSystem_2_onSubJobError(Exception exception,
-			String errorComponent, final java.util.Map<String, Object> globalMap)
-			throws TalendException {
+	public static class row1Struct implements
+			routines.system.IPersistableRow<row1Struct> {
+		final static byte[] commonByteArrayLock_TESTPROJECT_SecondJob = new byte[0];
+		static byte[] commonByteArray_TESTPROJECT_SecondJob = new byte[0];
 
-		resumeUtil.addLog("SYSTEM_LOG", "NODE:" + errorComponent, "", Thread
-				.currentThread().getId() + "", "FATAL", "",
-				exception.getMessage(),
-				ResumeUtil.getExceptionStackTrace(exception), "");
+		public Integer id;
+
+		public Integer getId() {
+			return this.id;
+		}
+
+		public String Nom;
+
+		public String getNom() {
+			return this.Nom;
+		}
+
+		public Integer Age;
+
+		public Integer getAge() {
+			return this.Age;
+		}
+
+		private Integer readInteger(ObjectInputStream dis) throws IOException {
+			Integer intReturn;
+			int length = 0;
+			length = dis.readByte();
+			if (length == -1) {
+				intReturn = null;
+			} else {
+				intReturn = dis.readInt();
+			}
+			return intReturn;
+		}
+
+		private void writeInteger(Integer intNum, ObjectOutputStream dos)
+				throws IOException {
+			if (intNum == null) {
+				dos.writeByte(-1);
+			} else {
+				dos.writeByte(0);
+				dos.writeInt(intNum);
+			}
+		}
+
+		private String readString(ObjectInputStream dis) throws IOException {
+			String strReturn = null;
+			int length = 0;
+			length = dis.readInt();
+			if (length == -1) {
+				strReturn = null;
+			} else {
+				if (length > commonByteArray_TESTPROJECT_SecondJob.length) {
+					if (length < 1024
+							&& commonByteArray_TESTPROJECT_SecondJob.length == 0) {
+						commonByteArray_TESTPROJECT_SecondJob = new byte[1024];
+					} else {
+						commonByteArray_TESTPROJECT_SecondJob = new byte[2 * length];
+					}
+				}
+				dis.readFully(commonByteArray_TESTPROJECT_SecondJob, 0, length);
+				strReturn = new String(commonByteArray_TESTPROJECT_SecondJob,
+						0, length, utf8Charset);
+			}
+			return strReturn;
+		}
+
+		private void writeString(String str, ObjectOutputStream dos)
+				throws IOException {
+			if (str == null) {
+				dos.writeInt(-1);
+			} else {
+				byte[] byteArray = str.getBytes(utf8Charset);
+				dos.writeInt(byteArray.length);
+				dos.write(byteArray);
+			}
+		}
+
+		public void readData(ObjectInputStream dis) {
+
+			synchronized (commonByteArrayLock_TESTPROJECT_SecondJob) {
+
+				try {
+
+					int length = 0;
+
+					this.id = readInteger(dis);
+
+					this.Nom = readString(dis);
+
+					this.Age = readInteger(dis);
+
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+
+				}
+
+			}
+
+		}
+
+		public void writeData(ObjectOutputStream dos) {
+			try {
+
+				// Integer
+
+				writeInteger(this.id, dos);
+
+				// String
+
+				writeString(this.Nom, dos);
+
+				// Integer
+
+				writeInteger(this.Age, dos);
+
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+		}
+
+		public String toString() {
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(super.toString());
+			sb.append("[");
+			sb.append("id=" + String.valueOf(id));
+			sb.append(",Nom=" + Nom);
+			sb.append(",Age=" + String.valueOf(Age));
+			sb.append("]");
+
+			return sb.toString();
+		}
+
+		/**
+		 * Compare keys
+		 */
+		public int compareTo(row1Struct other) {
+
+			int returnValue = -1;
+
+			return returnValue;
+		}
+
+		private int checkNullsAndCompare(Object object1, Object object2) {
+			int returnValue = 0;
+			if (object1 instanceof Comparable && object2 instanceof Comparable) {
+				returnValue = ((Comparable) object1).compareTo(object2);
+			} else if (object1 != null && object2 != null) {
+				returnValue = compareStrings(object1.toString(),
+						object2.toString());
+			} else if (object1 == null && object2 != null) {
+				returnValue = 1;
+			} else if (object1 != null && object2 == null) {
+				returnValue = -1;
+			} else {
+				returnValue = 0;
+			}
+
+			return returnValue;
+		}
+
+		private int compareStrings(String string1, String string2) {
+			return string1.compareTo(string2);
+		}
 
 	}
 
-	public void tPrejob_1_onSubJobError(Exception exception,
-			String errorComponent, final java.util.Map<String, Object> globalMap)
+	public void tRowGenerator_1Process(
+			final java.util.Map<String, Object> globalMap)
 			throws TalendException {
-
-		resumeUtil.addLog("SYSTEM_LOG", "NODE:" + errorComponent, "", Thread
-				.currentThread().getId() + "", "FATAL", "",
-				exception.getMessage(),
-				ResumeUtil.getExceptionStackTrace(exception), "");
-
-	}
-
-	public void tSystem_1_onSubJobError(Exception exception,
-			String errorComponent, final java.util.Map<String, Object> globalMap)
-			throws TalendException {
-
-		resumeUtil.addLog("SYSTEM_LOG", "NODE:" + errorComponent, "", Thread
-				.currentThread().getId() + "", "FATAL", "",
-				exception.getMessage(),
-				ResumeUtil.getExceptionStackTrace(exception), "");
-
-	}
-
-	public void tPostjob_1Process(final java.util.Map<String, Object> globalMap)
-			throws TalendException {
-		globalMap.put("tPostjob_1_SUBPROCESS_STATE", 0);
+		globalMap.put("tRowGenerator_1_SUBPROCESS_STATE", 0);
 
 		final boolean execStat = this.execStat;
 
@@ -384,379 +499,243 @@ public class FirstJob implements TalendJob {
 			if (resumeIt || globalResumeTicket) { // start the resume
 				globalResumeTicket = true;
 
-				/**
-				 * [tPostjob_1 begin ] start
-				 */
-
-				ok_Hash.put("tPostjob_1", false);
-				start_Hash.put("tPostjob_1", System.currentTimeMillis());
-
-				currentComponent = "tPostjob_1";
-
-				int tos_count_tPostjob_1 = 0;
+				row1Struct row1 = new row1Struct();
 
 				/**
-				 * [tPostjob_1 begin ] stop
+				 * [tLogRow_1 begin ] start
 				 */
 
-				/**
-				 * [tPostjob_1 main ] start
-				 */
+				ok_Hash.put("tLogRow_1", false);
+				start_Hash.put("tLogRow_1", System.currentTimeMillis());
 
-				currentComponent = "tPostjob_1";
-
-				tos_count_tPostjob_1++;
-
-				/**
-				 * [tPostjob_1 main ] stop
-				 */
-
-				/**
-				 * [tPostjob_1 process_data_begin ] start
-				 */
-
-				currentComponent = "tPostjob_1";
-
-				/**
-				 * [tPostjob_1 process_data_begin ] stop
-				 */
-
-				/**
-				 * [tPostjob_1 process_data_end ] start
-				 */
-
-				currentComponent = "tPostjob_1";
-
-				/**
-				 * [tPostjob_1 process_data_end ] stop
-				 */
-
-				/**
-				 * [tPostjob_1 end ] start
-				 */
-
-				currentComponent = "tPostjob_1";
-
-				ok_Hash.put("tPostjob_1", true);
-				end_Hash.put("tPostjob_1", System.currentTimeMillis());
+				currentComponent = "tLogRow_1";
 
 				if (execStat) {
-					runStat.updateStatOnConnection("OnComponentOk2", 0, "ok");
-				}
-				tSystem_2Process(globalMap);
+					if (resourceMap.get("inIterateVComp") == null) {
 
-				/**
-				 * [tPostjob_1 end ] stop
-				 */
-			}// end the resume
+						runStat.updateStatOnConnection("row1" + iterateId, 0, 0);
 
-		} catch (java.lang.Exception e) {
-
-			TalendException te = new TalendException(e, currentComponent,
-					globalMap);
-
-			throw te;
-		} catch (java.lang.Error error) {
-
-			runStat.stopThreadStat();
-
-			throw error;
-		} finally {
-
-			try {
-
-				/**
-				 * [tPostjob_1 finally ] start
-				 */
-
-				currentComponent = "tPostjob_1";
-
-				/**
-				 * [tPostjob_1 finally ] stop
-				 */
-			} catch (java.lang.Exception e) {
-				// ignore
-			} catch (java.lang.Error error) {
-				// ignore
-			}
-			resourceMap = null;
-		}
-
-		globalMap.put("tPostjob_1_SUBPROCESS_STATE", 1);
-	}
-
-	public void tSystem_2Process(final java.util.Map<String, Object> globalMap)
-			throws TalendException {
-		globalMap.put("tSystem_2_SUBPROCESS_STATE", 0);
-
-		final boolean execStat = this.execStat;
-
-		String iterateId = "";
-
-		String currentComponent = "";
-		java.util.Map<String, Object> resourceMap = new java.util.HashMap<String, Object>();
-
-		try {
-			// TDI-39566 avoid throwing an useless Exception
-			boolean resumeIt = true;
-			if (globalResumeTicket == false && resumeEntryMethodName != null) {
-				String currentMethodName = new java.lang.Exception()
-						.getStackTrace()[0].getMethodName();
-				resumeIt = resumeEntryMethodName.equals(currentMethodName);
-			}
-			if (resumeIt || globalResumeTicket) { // start the resume
-				globalResumeTicket = true;
-
-				/**
-				 * [tSystem_2 begin ] start
-				 */
-
-				ok_Hash.put("tSystem_2", false);
-				start_Hash.put("tSystem_2", System.currentTimeMillis());
-
-				currentComponent = "tSystem_2";
-
-				int tos_count_tSystem_2 = 0;
-
-				Runtime runtime_tSystem_2 = Runtime.getRuntime();
-
-				String[] env_tSystem_2 = null;
-				java.util.Map<String, String> envMap_tSystem_2 = System
-						.getenv();
-				java.util.Map<String, String> envMapClone_tSystem_2 = new java.util.HashMap();
-				envMapClone_tSystem_2.putAll(envMap_tSystem_2);
-
-				final Process ps_tSystem_2 = runtime_tSystem_2.exec(
-						"echo \"It gonna be FUN\"", env_tSystem_2);
-
-				globalMap.remove("tSystem_2_OUTPUT");
-				globalMap.remove("tSystem_2_ERROROUTPUT");
-
-				Thread normal_tSystem_2 = new Thread() {
-					public void run() {
-						try {
-							java.io.BufferedReader reader = new java.io.BufferedReader(
-									new java.io.InputStreamReader(
-											ps_tSystem_2.getInputStream()));
-							String line = "";
-							try {
-								while ((line = reader.readLine()) != null) {
-
-									System.out.println(line);
-								}
-							} finally {
-								reader.close();
-							}
-						} catch (java.io.IOException ioe) {
-
-							ioe.printStackTrace();
-						}
 					}
-				};
-				normal_tSystem_2.start();
-
-				Thread error_tSystem_2 = new Thread() {
-					public void run() {
-						try {
-							java.io.BufferedReader reader = new java.io.BufferedReader(
-									new java.io.InputStreamReader(
-											ps_tSystem_2.getErrorStream()));
-							String line = "";
-							try {
-								while ((line = reader.readLine()) != null) {
-
-									System.err.println(line);
-								}
-							} finally {
-								reader.close();
-							}
-						} catch (java.io.IOException ioe) {
-
-							ioe.printStackTrace();
-						}
-					}
-				};
-				error_tSystem_2.start();
-				if (ps_tSystem_2.getOutputStream() != null) {
-					ps_tSystem_2.getOutputStream().close();
 				}
-				ps_tSystem_2.waitFor();
-				normal_tSystem_2.join(10000);
-				error_tSystem_2.join(10000);
+
+				int tos_count_tLogRow_1 = 0;
+
+				// /////////////////////
+
+				final String OUTPUT_FIELD_SEPARATOR_tLogRow_1 = "|";
+				java.io.PrintStream consoleOut_tLogRow_1 = null;
+
+				StringBuilder strBuffer_tLogRow_1 = null;
+				int nb_line_tLogRow_1 = 0;
+				// /////////////////////
 
 				/**
-				 * [tSystem_2 begin ] stop
+				 * [tLogRow_1 begin ] stop
 				 */
 
 				/**
-				 * [tSystem_2 main ] start
+				 * [tRowGenerator_1 begin ] start
 				 */
 
-				currentComponent = "tSystem_2";
+				ok_Hash.put("tRowGenerator_1", false);
+				start_Hash.put("tRowGenerator_1", System.currentTimeMillis());
 
-				tos_count_tSystem_2++;
+				currentComponent = "tRowGenerator_1";
+
+				int tos_count_tRowGenerator_1 = 0;
+
+				int nb_line_tRowGenerator_1 = 0;
+				int nb_max_row_tRowGenerator_1 = 40;
+
+				class tRowGenerator_1Randomizer {
+					public Integer getRandomid() {
+
+						return Numeric.sequence("random_rows_sequences", 1, 1);
+
+					}
+
+					public String getRandomNom() {
+
+						return TalendDataGenerator.getFirstName();
+
+					}
+
+					public Integer getRandomAge() {
+
+						return Numeric.random(1, 999);
+
+					}
+				}
+				tRowGenerator_1Randomizer randtRowGenerator_1 = new tRowGenerator_1Randomizer();
+
+				for (int itRowGenerator_1 = 0; itRowGenerator_1 < nb_max_row_tRowGenerator_1; itRowGenerator_1++) {
+					row1.id = randtRowGenerator_1.getRandomid();
+					row1.Nom = randtRowGenerator_1.getRandomNom();
+					row1.Age = randtRowGenerator_1.getRandomAge();
+					nb_line_tRowGenerator_1++;
+
+					/**
+					 * [tRowGenerator_1 begin ] stop
+					 */
+
+					/**
+					 * [tRowGenerator_1 main ] start
+					 */
+
+					currentComponent = "tRowGenerator_1";
+
+					tos_count_tRowGenerator_1++;
+
+					/**
+					 * [tRowGenerator_1 main ] stop
+					 */
+
+					/**
+					 * [tRowGenerator_1 process_data_begin ] start
+					 */
+
+					currentComponent = "tRowGenerator_1";
+
+					/**
+					 * [tRowGenerator_1 process_data_begin ] stop
+					 */
+
+					/**
+					 * [tLogRow_1 main ] start
+					 */
+
+					currentComponent = "tLogRow_1";
+
+					// row1
+					// row1
+
+					if (execStat) {
+						runStat.updateStatOnConnection("row1" + iterateId, 1, 1);
+					}
+
+					// /////////////////////
+
+					strBuffer_tLogRow_1 = new StringBuilder();
+
+					if (row1.id != null) { //
+
+						strBuffer_tLogRow_1.append(String.valueOf(row1.id));
+
+					} //
+
+					strBuffer_tLogRow_1.append("|");
+
+					if (row1.Nom != null) { //
+
+						strBuffer_tLogRow_1.append(String.valueOf(row1.Nom));
+
+					} //
+
+					strBuffer_tLogRow_1.append("|");
+
+					if (row1.Age != null) { //
+
+						strBuffer_tLogRow_1.append(String.valueOf(row1.Age));
+
+					} //
+
+					if (globalMap.get("tLogRow_CONSOLE") != null) {
+						consoleOut_tLogRow_1 = (java.io.PrintStream) globalMap
+								.get("tLogRow_CONSOLE");
+					} else {
+						consoleOut_tLogRow_1 = new java.io.PrintStream(
+								new java.io.BufferedOutputStream(System.out));
+						globalMap.put("tLogRow_CONSOLE", consoleOut_tLogRow_1);
+					}
+					consoleOut_tLogRow_1
+							.println(strBuffer_tLogRow_1.toString());
+					consoleOut_tLogRow_1.flush();
+					nb_line_tLogRow_1++;
+					// ////
+
+					// ////
+
+					// /////////////////////
+
+					tos_count_tLogRow_1++;
+
+					/**
+					 * [tLogRow_1 main ] stop
+					 */
+
+					/**
+					 * [tLogRow_1 process_data_begin ] start
+					 */
+
+					currentComponent = "tLogRow_1";
+
+					/**
+					 * [tLogRow_1 process_data_begin ] stop
+					 */
+
+					/**
+					 * [tLogRow_1 process_data_end ] start
+					 */
+
+					currentComponent = "tLogRow_1";
+
+					/**
+					 * [tLogRow_1 process_data_end ] stop
+					 */
+
+					/**
+					 * [tRowGenerator_1 process_data_end ] start
+					 */
+
+					currentComponent = "tRowGenerator_1";
+
+					/**
+					 * [tRowGenerator_1 process_data_end ] stop
+					 */
+
+					/**
+					 * [tRowGenerator_1 end ] start
+					 */
+
+					currentComponent = "tRowGenerator_1";
+
+				}
+				globalMap.put("tRowGenerator_1_NB_LINE",
+						nb_line_tRowGenerator_1);
+
+				ok_Hash.put("tRowGenerator_1", true);
+				end_Hash.put("tRowGenerator_1", System.currentTimeMillis());
 
 				/**
-				 * [tSystem_2 main ] stop
+				 * [tRowGenerator_1 end ] stop
 				 */
 
 				/**
-				 * [tSystem_2 process_data_begin ] start
+				 * [tLogRow_1 end ] start
 				 */
 
-				currentComponent = "tSystem_2";
+				currentComponent = "tLogRow_1";
 
-				/**
-				 * [tSystem_2 process_data_begin ] stop
-				 */
+				// ////
+				// ////
+				globalMap.put("tLogRow_1_NB_LINE", nb_line_tLogRow_1);
 
-				/**
-				 * [tSystem_2 process_data_end ] start
-				 */
-
-				currentComponent = "tSystem_2";
-
-				/**
-				 * [tSystem_2 process_data_end ] stop
-				 */
-
-				/**
-				 * [tSystem_2 end ] start
-				 */
-
-				currentComponent = "tSystem_2";
-
-				globalMap.put("tSystem_2_EXIT_VALUE", ps_tSystem_2.exitValue());
-
-				ok_Hash.put("tSystem_2", true);
-				end_Hash.put("tSystem_2", System.currentTimeMillis());
-
-				/**
-				 * [tSystem_2 end ] stop
-				 */
-			}// end the resume
-
-		} catch (java.lang.Exception e) {
-
-			TalendException te = new TalendException(e, currentComponent,
-					globalMap);
-
-			throw te;
-		} catch (java.lang.Error error) {
-
-			runStat.stopThreadStat();
-
-			throw error;
-		} finally {
-
-			try {
-
-				/**
-				 * [tSystem_2 finally ] start
-				 */
-
-				currentComponent = "tSystem_2";
-
-				/**
-				 * [tSystem_2 finally ] stop
-				 */
-			} catch (java.lang.Exception e) {
-				// ignore
-			} catch (java.lang.Error error) {
-				// ignore
-			}
-			resourceMap = null;
-		}
-
-		globalMap.put("tSystem_2_SUBPROCESS_STATE", 1);
-	}
-
-	public void tPrejob_1Process(final java.util.Map<String, Object> globalMap)
-			throws TalendException {
-		globalMap.put("tPrejob_1_SUBPROCESS_STATE", 0);
-
-		final boolean execStat = this.execStat;
-
-		String iterateId = "";
-
-		String currentComponent = "";
-		java.util.Map<String, Object> resourceMap = new java.util.HashMap<String, Object>();
-
-		try {
-			// TDI-39566 avoid throwing an useless Exception
-			boolean resumeIt = true;
-			if (globalResumeTicket == false && resumeEntryMethodName != null) {
-				String currentMethodName = new java.lang.Exception()
-						.getStackTrace()[0].getMethodName();
-				resumeIt = resumeEntryMethodName.equals(currentMethodName);
-			}
-			if (resumeIt || globalResumeTicket) { // start the resume
-				globalResumeTicket = true;
-
-				/**
-				 * [tPrejob_1 begin ] start
-				 */
-
-				ok_Hash.put("tPrejob_1", false);
-				start_Hash.put("tPrejob_1", System.currentTimeMillis());
-
-				currentComponent = "tPrejob_1";
-
-				int tos_count_tPrejob_1 = 0;
-
-				/**
-				 * [tPrejob_1 begin ] stop
-				 */
-
-				/**
-				 * [tPrejob_1 main ] start
-				 */
-
-				currentComponent = "tPrejob_1";
-
-				tos_count_tPrejob_1++;
-
-				/**
-				 * [tPrejob_1 main ] stop
-				 */
-
-				/**
-				 * [tPrejob_1 process_data_begin ] start
-				 */
-
-				currentComponent = "tPrejob_1";
-
-				/**
-				 * [tPrejob_1 process_data_begin ] stop
-				 */
-
-				/**
-				 * [tPrejob_1 process_data_end ] start
-				 */
-
-				currentComponent = "tPrejob_1";
-
-				/**
-				 * [tPrejob_1 process_data_end ] stop
-				 */
-
-				/**
-				 * [tPrejob_1 end ] start
-				 */
-
-				currentComponent = "tPrejob_1";
-
-				ok_Hash.put("tPrejob_1", true);
-				end_Hash.put("tPrejob_1", System.currentTimeMillis());
+				// /////////////////////
 
 				if (execStat) {
-					runStat.updateStatOnConnection("OnComponentOk1", 0, "ok");
+					if (resourceMap.get("inIterateVComp") == null
+							|| !((Boolean) resourceMap.get("inIterateVComp"))) {
+						runStat.updateStatOnConnection("row1" + iterateId, 2, 0);
+					}
 				}
-				tSystem_1Process(globalMap);
+
+				ok_Hash.put("tLogRow_1", true);
+				end_Hash.put("tLogRow_1", System.currentTimeMillis());
 
 				/**
-				 * [tPrejob_1 end ] stop
+				 * [tLogRow_1 end ] stop
 				 */
+
 			}// end the resume
 
 		} catch (java.lang.Exception e) {
@@ -775,14 +754,25 @@ public class FirstJob implements TalendJob {
 			try {
 
 				/**
-				 * [tPrejob_1 finally ] start
+				 * [tRowGenerator_1 finally ] start
 				 */
 
-				currentComponent = "tPrejob_1";
+				currentComponent = "tRowGenerator_1";
 
 				/**
-				 * [tPrejob_1 finally ] stop
+				 * [tRowGenerator_1 finally ] stop
 				 */
+
+				/**
+				 * [tLogRow_1 finally ] start
+				 */
+
+				currentComponent = "tLogRow_1";
+
+				/**
+				 * [tLogRow_1 finally ] stop
+				 */
+
 			} catch (java.lang.Exception e) {
 				// ignore
 			} catch (java.lang.Error error) {
@@ -791,194 +781,7 @@ public class FirstJob implements TalendJob {
 			resourceMap = null;
 		}
 
-		globalMap.put("tPrejob_1_SUBPROCESS_STATE", 1);
-	}
-
-	public void tSystem_1Process(final java.util.Map<String, Object> globalMap)
-			throws TalendException {
-		globalMap.put("tSystem_1_SUBPROCESS_STATE", 0);
-
-		final boolean execStat = this.execStat;
-
-		String iterateId = "";
-
-		String currentComponent = "";
-		java.util.Map<String, Object> resourceMap = new java.util.HashMap<String, Object>();
-
-		try {
-			// TDI-39566 avoid throwing an useless Exception
-			boolean resumeIt = true;
-			if (globalResumeTicket == false && resumeEntryMethodName != null) {
-				String currentMethodName = new java.lang.Exception()
-						.getStackTrace()[0].getMethodName();
-				resumeIt = resumeEntryMethodName.equals(currentMethodName);
-			}
-			if (resumeIt || globalResumeTicket) { // start the resume
-				globalResumeTicket = true;
-
-				/**
-				 * [tSystem_1 begin ] start
-				 */
-
-				ok_Hash.put("tSystem_1", false);
-				start_Hash.put("tSystem_1", System.currentTimeMillis());
-
-				currentComponent = "tSystem_1";
-
-				int tos_count_tSystem_1 = 0;
-
-				Runtime runtime_tSystem_1 = Runtime.getRuntime();
-
-				String[] env_tSystem_1 = null;
-				java.util.Map<String, String> envMap_tSystem_1 = System
-						.getenv();
-				java.util.Map<String, String> envMapClone_tSystem_1 = new java.util.HashMap();
-				envMapClone_tSystem_1.putAll(envMap_tSystem_1);
-
-				final Process ps_tSystem_1 = runtime_tSystem_1
-						.exec("echo \"HELLO WORLD TODAY we GONNA USE TOS with GIT\" ",
-								env_tSystem_1);
-
-				globalMap.remove("tSystem_1_OUTPUT");
-				globalMap.remove("tSystem_1_ERROROUTPUT");
-
-				Thread normal_tSystem_1 = new Thread() {
-					public void run() {
-						try {
-							java.io.BufferedReader reader = new java.io.BufferedReader(
-									new java.io.InputStreamReader(
-											ps_tSystem_1.getInputStream()));
-							String line = "";
-							try {
-								while ((line = reader.readLine()) != null) {
-
-									System.out.println(line);
-								}
-							} finally {
-								reader.close();
-							}
-						} catch (java.io.IOException ioe) {
-
-							ioe.printStackTrace();
-						}
-					}
-				};
-				normal_tSystem_1.start();
-
-				Thread error_tSystem_1 = new Thread() {
-					public void run() {
-						try {
-							java.io.BufferedReader reader = new java.io.BufferedReader(
-									new java.io.InputStreamReader(
-											ps_tSystem_1.getErrorStream()));
-							String line = "";
-							try {
-								while ((line = reader.readLine()) != null) {
-
-									System.err.println(line);
-								}
-							} finally {
-								reader.close();
-							}
-						} catch (java.io.IOException ioe) {
-
-							ioe.printStackTrace();
-						}
-					}
-				};
-				error_tSystem_1.start();
-				if (ps_tSystem_1.getOutputStream() != null) {
-					ps_tSystem_1.getOutputStream().close();
-				}
-				ps_tSystem_1.waitFor();
-				normal_tSystem_1.join(10000);
-				error_tSystem_1.join(10000);
-
-				/**
-				 * [tSystem_1 begin ] stop
-				 */
-
-				/**
-				 * [tSystem_1 main ] start
-				 */
-
-				currentComponent = "tSystem_1";
-
-				tos_count_tSystem_1++;
-
-				/**
-				 * [tSystem_1 main ] stop
-				 */
-
-				/**
-				 * [tSystem_1 process_data_begin ] start
-				 */
-
-				currentComponent = "tSystem_1";
-
-				/**
-				 * [tSystem_1 process_data_begin ] stop
-				 */
-
-				/**
-				 * [tSystem_1 process_data_end ] start
-				 */
-
-				currentComponent = "tSystem_1";
-
-				/**
-				 * [tSystem_1 process_data_end ] stop
-				 */
-
-				/**
-				 * [tSystem_1 end ] start
-				 */
-
-				currentComponent = "tSystem_1";
-
-				globalMap.put("tSystem_1_EXIT_VALUE", ps_tSystem_1.exitValue());
-
-				ok_Hash.put("tSystem_1", true);
-				end_Hash.put("tSystem_1", System.currentTimeMillis());
-
-				/**
-				 * [tSystem_1 end ] stop
-				 */
-			}// end the resume
-
-		} catch (java.lang.Exception e) {
-
-			TalendException te = new TalendException(e, currentComponent,
-					globalMap);
-
-			throw te;
-		} catch (java.lang.Error error) {
-
-			runStat.stopThreadStat();
-
-			throw error;
-		} finally {
-
-			try {
-
-				/**
-				 * [tSystem_1 finally ] start
-				 */
-
-				currentComponent = "tSystem_1";
-
-				/**
-				 * [tSystem_1 finally ] stop
-				 */
-			} catch (java.lang.Exception e) {
-				// ignore
-			} catch (java.lang.Error error) {
-				// ignore
-			}
-			resourceMap = null;
-		}
-
-		globalMap.put("tSystem_1_SUBPROCESS_STATE", 1);
+		globalMap.put("tRowGenerator_1_SUBPROCESS_STATE", 1);
 	}
 
 	public String resuming_logs_dir_path = null;
@@ -1020,9 +823,9 @@ public class FirstJob implements TalendJob {
 	public String status = "";
 
 	public static void main(String[] args) {
-		final FirstJob FirstJobClass = new FirstJob();
+		final SecondJob SecondJobClass = new SecondJob();
 
-		int exitCode = FirstJobClass.runJobInTOS(args);
+		int exitCode = SecondJobClass.runJobInTOS(args);
 
 		System.exit(exitCode);
 	}
@@ -1091,12 +894,12 @@ public class FirstJob implements TalendJob {
 			// call job/subjob with an existing context, like:
 			// --context=production. if without this parameter, there will use
 			// the default context instead.
-			java.io.InputStream inContext = FirstJob.class.getClassLoader()
+			java.io.InputStream inContext = SecondJob.class.getClassLoader()
 					.getResourceAsStream(
-							"testproject/firstjob_0_1/contexts/" + contextStr
+							"testproject/secondjob_0_1/contexts/" + contextStr
 									+ ".properties");
 			if (inContext == null) {
-				inContext = FirstJob.class
+				inContext = SecondJob.class
 						.getClassLoader()
 						.getResourceAsStream(
 								"config/contexts/" + contextStr + ".properties");
@@ -1169,35 +972,22 @@ public class FirstJob implements TalendJob {
 
 		this.globalResumeTicket = true;// to run tPreJob
 
-		try {
-			errorCode = null;
-			tPrejob_1Process(globalMap);
-			if (!"failure".equals(status)) {
-				status = "end";
-			}
-		} catch (TalendException e_tPrejob_1) {
-			globalMap.put("tPrejob_1_SUBPROCESS_STATE", -1);
-
-			e_tPrejob_1.printStackTrace();
-
-		}
-
 		this.globalResumeTicket = false;// to run others jobs
 
-		this.globalResumeTicket = true;// to run tPostJob
-
 		try {
 			errorCode = null;
-			tPostjob_1Process(globalMap);
+			tRowGenerator_1Process(globalMap);
 			if (!"failure".equals(status)) {
 				status = "end";
 			}
-		} catch (TalendException e_tPostjob_1) {
-			globalMap.put("tPostjob_1_SUBPROCESS_STATE", -1);
+		} catch (TalendException e_tRowGenerator_1) {
+			globalMap.put("tRowGenerator_1_SUBPROCESS_STATE", -1);
 
-			e_tPostjob_1.printStackTrace();
+			e_tRowGenerator_1.printStackTrace();
 
 		}
+
+		this.globalResumeTicket = true;// to run tPostJob
 
 		end = System.currentTimeMillis();
 
@@ -1209,7 +999,7 @@ public class FirstJob implements TalendJob {
 				- Runtime.getRuntime().freeMemory();
 		if (false) {
 			System.out.println((endUsedMemory - startUsedMemory)
-					+ " bytes memory increase when running : FirstJob");
+					+ " bytes memory increase when running : SecondJob");
 		}
 
 		if (execStat) {
@@ -1352,6 +1142,6 @@ public class FirstJob implements TalendJob {
 	ResumeUtil resumeUtil = null;
 }
 /************************************************************************************************
- * 35563 characters generated by Talend Open Studio for Data Integration on the
- * 15 mai 2019 12:50:33 CEST
+ * 31576 characters generated by Talend Open Studio for Data Integration on the
+ * 15 mai 2019 12:56:36 CEST
  ************************************************************************************************/
